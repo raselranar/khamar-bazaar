@@ -1,12 +1,10 @@
-// lib/mock-data.ts
-
 export interface User {
   _id: string;
   name: string;
   email: string;
   passwordHash: string; // Mock only
   role: "user" | "admin";
-  location?: string;
+  location: string;
   createdAt: Date;
 }
 
@@ -15,10 +13,10 @@ export interface Listing {
   title: string;
   shortDescription: string;
   fullDescription: string;
-  category: "Duck" | "Chicken" | "Egg" | "Goat" | "Cow" | "Feed & Supplies";
+  category: "Duck" | "Chicken" | "Goat" | "Egg";
   price: number;
   age?: string;
-  breed?: string;
+  breed: string;
   location: string;
   imageUrl?: string;
   sellerId: string;
@@ -30,7 +28,7 @@ export const mockUsers: User[] = [
     _id: "u1",
     name: "Rahim Uddin",
     email: "rahim@demo.com",
-    passwordHash: "hashed_demo_123",
+    passwordHash: "hashed_demo_123", // Mock only
     role: "user",
     location: "Bochaganj, Rangpur",
     createdAt: new Date("2025-10-10"),
@@ -99,6 +97,7 @@ export const mockListings: Listing[] = [
     imageUrl:
       "https://images.unsplash.com/photo-1598965402089-897ce52e8355?auto=format&fit=crop&q=80&w=800",
     sellerId: "u1",
+    breed: "Black Bengal",
     createdAt: new Date("2026-07-09"),
   },
 ];
