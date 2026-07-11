@@ -28,3 +28,13 @@ export const submitListing = (
     }, 600),
   );
 };
+
+export const deleteListing = (id: string): Promise<{ success: boolean }> => {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      const index = mockListings.findIndex((item) => item._id === id);
+      mockListings.splice(index, 1);
+      resolve({ success: true });
+    }, 600),
+  );
+};

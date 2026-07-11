@@ -85,6 +85,7 @@ export default function ExplorePage() {
                 </span>
               </div>
               <Slider
+                className="bg-muted-foreground rounded-2xl h-fit p-1"
                 value={maxPrice}
                 onValueChange={setMaxPrice}
                 max={50000}

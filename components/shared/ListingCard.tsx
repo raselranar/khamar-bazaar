@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 interface ListingType {
   _id: string;
@@ -13,10 +14,12 @@ interface ListingType {
 
 export function ListingCard({ listing }: { listing: ListingType }) {
   return (
-    <Card className="overflow-hidden bg-card border-0 shadow-sm flex flex-col h-full">
+    <Card className="overflow-hidden pt-0 bg-card border-0 shadow-sm flex flex-col h-full">
       <div className="relative aspect-4/3 w-full bg-muted overflow-hidden">
         {listing.imageUrl ? (
-          <img
+          <Image
+            width={400}
+            height={300}
             src={listing.imageUrl}
             alt={listing.title}
             className="object-cover w-full h-full"
