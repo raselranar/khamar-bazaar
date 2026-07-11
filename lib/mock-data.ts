@@ -13,7 +13,7 @@ export interface Listing {
   title: string;
   shortDescription: string;
   fullDescription: string;
-  category: "Duck" | "Chicken" | "Goat" | "Egg";
+  category: "Duck" | "Chicken" | "Goat" | "Egg" | "Cow";
   price: number;
   age?: string;
   breed: string;
