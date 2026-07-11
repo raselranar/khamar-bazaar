@@ -54,13 +54,13 @@ export default function RegisterPage() {
       password: values.password, // required
       callbackURL: "/home",
     });
-    if (!data) return toast.error("Registration failed");
+    if (!data) return toast.error("Registration failed!" + error.message);
     toast.success(`Welcome, ${values.name}!`);
   }
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center py-20 px-6">
-      <div className="w-full max-w-100">
+      <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <h1 className="text-[2rem] font-semibold tracking-tight mb-2">
             Create an Account

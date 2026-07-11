@@ -51,7 +51,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center py-20 px-6">
-      <div className="w-full max-w-100">
+      <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <h1 className="text-[2rem] font-semibold tracking-tight mb-2">
             Welcome Back
