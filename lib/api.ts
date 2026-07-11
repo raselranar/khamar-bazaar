@@ -38,3 +38,9 @@ export const deleteListing = (id: string): Promise<{ success: boolean }> => {
     }, 600),
   );
 };
+
+export const getListingById = async (id: string): Promise<Listing | null> => {
+  const listItem = mockListings.find((item) => item._id === id);
+  if (!listItem) return null;
+  return listItem;
+};

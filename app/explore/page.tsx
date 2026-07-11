@@ -44,7 +44,7 @@ export default function ExplorePage() {
   }, [search, category, maxPrice, listings]);
 
   return (
-    <div className="container mx-auto px-6 max-w-300 py-12 flex flex-col md:flex-row gap-8">
+    <div className="container mx-auto px-6 max-w-7xl py-12 flex flex-col md:flex-row gap-8">
       {/* Sidebar Filters */}
       <aside className="w-full md:w-64 space-y-8 shrink-0">
         <div>
@@ -80,7 +80,7 @@ export default function ExplorePage() {
             <div className="space-y-4">
               <div className="flex justify-between">
                 <Label>Max Price</Label>
-                <span className="text-sm font-mono text-[#B8823A]">
+                <span className="text-sm font-mono text-primary">
                   ৳{maxPrice[0]}
                 </span>
               </div>
@@ -99,7 +99,7 @@ export default function ExplorePage() {
       {/* Main Grid */}
       <main className="flex-1">
         <div className="mb-6">
-          <h1 className="text-[2rem] font-semibold">Explore Listings</h1>
+          <h1 className="text-3xl font-semibold">Explore Listings</h1>
           <p className="text-muted-foreground">
             Showing {filtered.length} results
           </p>

@@ -23,7 +23,7 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", "font-sans", inter.variable)}>
       <body className="min-h-full flex flex-col">
         <Navbar />
-        <main>{children}</main>
+        <main className="">{children}</main>
         <Footer />
       </body>
     </html>

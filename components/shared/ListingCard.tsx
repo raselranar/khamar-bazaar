@@ -37,7 +37,7 @@ export function ListingCard({ listing }: { listing: ListingType }) {
             {listing.category}
           </span>
           {/* hay-gold inline color mapped to IBM Plex Mono (assuming font-mono handles this based on layout config) */}
-          <span className="text-[#B8823A] font-mono text-[1.125rem] font-medium">
+          <span className="text-primary font-mono text-[1.125rem] font-medium">
             ৳{listing.price}
           </span>
         </div>

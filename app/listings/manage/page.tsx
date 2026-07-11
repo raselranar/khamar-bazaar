@@ -48,10 +48,10 @@ export default function ManageListingsPage() {
   };
 
   return (
-    <div className="container mx-auto px-6 max-w-300 py-16">
+    <div className="container mx-auto px-6 max-w-7xl py-16">
       <div className="flex justify-between items-center mb-10">
         <div>
-          <h1 className="text-[2rem] font-semibold">Manage Listings</h1>
+          <h1 className="text-3xl font-semibold">Manage Listings</h1>
           <p className="text-muted-foreground">
             View, edit, and delete your active inventory.
           </p>
@@ -81,7 +81,7 @@ export default function ManageListingsPage() {
                     {listing.title}
                   </td>
                   <td className="px-6 py-4">{listing.category}</td>
-                  <td className="px-6 py-4 font-mono text-[#B8823A]">
+                  <td className="px-6 py-4 font-mono text-primary">
                     ৳{listing.price}
                   </td>
                   <td className="px-6 py-4 text-right space-x-2">

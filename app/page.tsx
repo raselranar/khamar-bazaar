@@ -16,7 +16,7 @@ export default async function HomePage() {
           <div className="absolute w-150 h-150 rounded-full border border-primary" />
         </div>
 
-        <div className="container relative z-10 mx-auto px-6 max-w-300">
+        <div className="container relative z-10 mx-auto px-6 max-w-7xl">
           <div className="max-w-2xl">
             <h1 className="text-[2.75rem] font-semibold leading-[1.1] text-foreground mb-6">
               From local farms, <br /> straight to you.
@@ -34,8 +34,8 @@ export default async function HomePage() {
 
       {/* 2. Categories */}
       <section className="py-20 bg-card">
-        <div className="container mx-auto px-6 max-w-300">
-          <h2 className="text-[2rem] font-semibold mb-10 text-foreground">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <h2 className="text-3xl font-semibold mb-10 text-foreground">
             Browse by Category
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -53,9 +53,9 @@ export default async function HomePage() {
 
       {/* 3. Featured Listings */}
       <section className="py-20 bg-background">
-        <div className="container mx-auto px-6 max-w-300">
+        <div className="container mx-auto px-6 max-w-7xl">
           <div className="flex justify-between items-end mb-10">
-            <h2 className="text-[2rem] font-semibold text-foreground">
+            <h2 className="text-3xl font-semibold text-foreground">
               Featured Listings
             </h2>
             <Link
@@ -74,8 +74,8 @@ export default async function HomePage() {
 
       {/* 4. How It Works */}
       <section className="py-20 bg-card">
-        <div className="container mx-auto px-6 max-w-300">
-          <h2 className="text-[2rem] font-semibold text-center mb-16 text-foreground">
+        <div className="container mx-auto px-6 max-w-7xl">
+          <h2 className="text-3xl font-semibold text-center mb-16 text-foreground">
             How It Works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
@@ -121,9 +121,9 @@ export default async function HomePage() {
 
       {/* 5. Why Khamar Bazaar & 6. Stats (Combined for clean layout) */}
       <section className="py-20 bg-foreground text-background">
-        <div className="container mx-auto px-6 max-w-300 grid md:grid-cols-2 gap-16 items-center">
+        <div className="container mx-auto px-6 max-w-7xl grid md:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-[2rem] font-semibold mb-6">
+            <h2 className="text-3xl font-semibold mb-6">
               Honest Trade. Local Roots.
             </h2>
             <p className="opacity-80 leading-relaxed mb-8">
@@ -132,13 +132,13 @@ export default async function HomePage() {
             </p>
             <div className="grid grid-cols-2 gap-6 font-mono">
               <div>
-                <span className="block text-[2rem] font-medium text-[#B8823A]">
+                <span className="block text-3xl font-medium text-primary">
                   1,200+
                 </span>
                 <span className="text-sm opacity-70">Active Listings</span>
               </div>
               <div>
-                <span className="block text-[2rem] font-medium text-[#B8823A]">
+                <span className="block text-3xl font-medium text-primary">
                   64
                 </span>
                 <span className="text-sm opacity-70">Districts Covered</span>
@@ -155,7 +155,7 @@ export default async function HomePage() {
       {/* 7. Newsletter CTA */}
       <section className="py-24 bg-background text-center">
         <div className="container mx-auto px-6 max-w-xl">
-          <h2 className="text-[2rem] font-semibold mb-4 text-foreground">
+          <h2 className="text-3xl font-semibold mb-4 text-foreground">
             Stay Updated
           </h2>
           <p className="text-muted-foreground mb-8">

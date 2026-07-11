@@ -20,7 +20,7 @@ export function Navbar() {
       className={`sticky top-0 z-50 w-full bg-card h-16 flex items-center transition-shadow duration-200 ${
         scrolled ? "shadow-sm" : ""
       }`}>
-      <div className="container mx-auto px-6 max-w-300 flex items-center justify-between w-full">
+      <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between w-full">
         <Link
           href="/"
           className="text-xl font-semibold tracking-tight text-foreground">

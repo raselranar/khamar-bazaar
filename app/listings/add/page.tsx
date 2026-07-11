@@ -75,7 +75,7 @@ export default function AddListingPage() {
 
   return (
     <div className="container mx-auto px-6 max-w-2xl py-16">
-      <h1 className="text-[2rem] font-semibold mb-2">Add New Listing</h1>
+      <h1 className="text-3xl font-semibold mb-2">Add New Listing</h1>
       <p className="text-muted-foreground mb-8">
         Fill out the details below to list your livestock or produce.
       </p>
