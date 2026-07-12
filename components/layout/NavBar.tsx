@@ -1,13 +1,117 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { LogOut, Menu, Sprout } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
-import { Menu } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState<boolean>(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
+
+  const navItems = [
+    { href: "/", label: "Home" },
+    { href: "/explore", label: "Explore" },
+    { href: "/about", label: "About" },
+  ];
+
+  const authItems = session
+    ? [
+        { href: "/dashboard", label: "Dashboard" },
+        { href: "/listings/add", label: "Add Listing" },
+        { href: "/listings/manage", label: "Manage Listings" },
+      ]
+    : [];
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await authClient.signOut();
+      router.push("/");
+    } finally {
+      setIsSigningOut(false);
+      setOpen(false);
+    }
+  };
+
+  const renderLinks = (mobile = false) => (
+    <div className={mobile ? "flex flex-col gap-2" : "flex items-center gap-2"}>
+      {navItems.map((item) => {
+        const isActive = pathname === item.href;
+
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={() => setOpen(false)}
+            className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+              isActive
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/80 hover:bg-accent hover:text-foreground"
+            }`}>
+            {item.label}
+          </Link>
+        );
+      })}
+
+      {session ? (
+        <>
+          {authItems.map((item) => {
+            const isActive = pathname === item.href;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className={`rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/80 hover:bg-accent hover:text-foreground"
+                }`}>
+                {item.label}
+              </Link>
+            );
+          })}
+
+          <div className="flex items-center gap-2 pt-1 md:pt-0">
+            <div className="hidden rounded-full border border-border/60 bg-background/80 px-3 py-2 text-sm text-muted-foreground lg:block">
+              {session.user?.name ? `Hi, ${session.user.name}` : "Welcome back"}
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSignOut}
+              disabled={isSigningOut}
+              className="rounded-full">
+              <LogOut className="h-4 w-4" />
+              {isSigningOut ? "Signing out..." : "Log out"}
+            </Button>
+          </div>
+        </>
+      ) : (
+        <div className="flex items-center gap-2 pt-1 md:pt-0">
+          <Button asChild variant="outline" size="sm" className="rounded-full">
+            <Link href="/login" onClick={() => setOpen(false)}>
+              Login
+            </Link>
+          </Button>
+          <Button asChild size="sm" className="rounded-full">
+            <Link href="/register" onClick={() => setOpen(false)}>
+              Register
+            </Link>
+          </Button>
+        </div>
+      )}
+    </div>
+  );
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 0);
@@ -17,72 +121,34 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full bg-card h-16 flex items-center transition-shadow duration-200 ${
+      className={`sticky top-0 z-50 w-full border-b border-border/60 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80 transition-all duration-200 ${
         scrolled ? "shadow-sm" : ""
       }`}>
-      <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between w-full">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="text-xl font-semibold tracking-tight text-foreground">
-          Khamar Bazaar
+          className="flex items-center gap-2 text-lg font-semibold tracking-tight text-foreground">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <Sprout className="h-4 w-4" />
+          </span>
+          <span>Khamar Bazaar</span>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link
-            href="/"
-            className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Home
-          </Link>
-          <Link
-            href="/explore"
-            className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            Explore
-          </Link>
-          <Link
-            href="/about"
-            className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            About
-          </Link>
-          <Button asChild className="ml-4">
-            <Link href="/login">Add Listing</Link>
-          </Button>
-        </nav>
+        <nav className="hidden items-center gap-2 md:flex">{renderLinks()}</nav>
 
-        {/* Mobile Nav */}
         <div className="md:hidden">
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-foreground -mr-2">
-                <Menu className="h-6 w-6" />
+              <Button variant="ghost" size="icon" className="text-foreground">
+                <Menu className="h-5 w-5" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent
-              side="right"
-              className="w-75 bg-card flex flex-col gap-6 pt-16 border-l-0">
+              side="left"
+              className="w-80 border-r border-border/60 bg-background px-5 pt-16">
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-              <Link href="/" className="text-lg font-medium text-foreground">
-                Home
-              </Link>
-              <Link
-                href="/explore"
-                className="text-lg font-medium text-foreground">
-                Explore
-              </Link>
-              <Link
-                href="/about"
-                className="text-lg font-medium text-foreground">
-                About
-              </Link>
-              <div className="mt-auto pb-8">
-                <Button asChild className="w-full">
-                  <Link href="/login">Add Listing</Link>
-                </Button>
-              </div>
+              {renderLinks(true)}
             </SheetContent>
           </Sheet>
         </div>

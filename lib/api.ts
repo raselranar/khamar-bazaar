@@ -3,14 +3,25 @@ import { Listing, mockListings } from "./mock-data";
 export type NewListing = Omit<Listing, "_id" | "createdAt" | "sellerId">;
 
 // get data
-export const getListings = (): Promise<Listing[]> => {
-  return new Promise((resolve) => setTimeout(() => resolve(mockListings), 600));
+export const getListings = async () => {
+  try {
+    const res = await fetch("/api/listings");
+    return res.json();
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
 };
 // get featured data
-export const getFeaturedListings = (): Promise<Listing[]> => {
-  return new Promise((resolve) =>
-    setTimeout(() => resolve(mockListings.slice(0, 3)), 600),
-  );
+export const getFeaturedListings = async (): Promise<Listing[]> => {
+  try {
+    const res = await fetch("/api/listings/featured");
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.log(err);
+    return Promise.resolve([]);
+  }
 };
 // submit new listing
 export const submitListing = (

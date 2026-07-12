@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 interface ListingType {
   _id: string;
@@ -43,10 +44,12 @@ export function ListingCard({ listing }: { listing: ListingType }) {
         <div className="absolute w-[80%] aspect-square rounded-full border border-primary" />
       </motion.div>
 
-      <Card className="border-0 shadow-none bg-transparent flex flex-col h-full rounded-none relative z-20">
+      <Card className="border-0 shadow-none bg-transparent flex flex-col h-full pt-0 pb-2 rounded-none relative z-20">
         <div className="relative aspect-4/3 w-full bg-muted overflow-hidden">
           {listing.imageUrl ? (
-            <img
+            <Image
+              width={400}
+              height={300}
               src={listing.imageUrl}
               alt={listing.title}
               className="object-cover w-full h-full"
