@@ -1,12 +1,16 @@
+"use server";
 import { Listing, mockListings } from "./mock-data";
-
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 export type NewListing = Omit<Listing, "_id" | "createdAt" | "sellerId">;
 
 // get data
 export const getListings = async (params?: string) => {
   try {
     const query = params ? `?${params}` : "";
-    const res = await fetch(`/api/listings${query}`);
+    console.log(query);
+    // const res = await fetch(`/api/listings${query}`);
+    const res = await fetch(`${baseUrl}/api/listings${query}`);
+
     return res.json();
   } catch (err) {
     console.log(err);
@@ -16,7 +20,7 @@ export const getListings = async (params?: string) => {
 // get featured data
 export const getFeaturedListings = async (): Promise<Listing[]> => {
   try {
-    const res = await fetch("/api/listings/featured");
+    const res = await fetch(`${baseUrl}/api/listings/featured`);
     const data = await res.json();
     return data;
   } catch (err) {
@@ -25,7 +29,7 @@ export const getFeaturedListings = async (): Promise<Listing[]> => {
   }
 };
 // submit new listing
-export const submitListing = (
+export const submitListing = async (
   newList: NewListing,
 ): Promise<{ success: boolean }> => {
   return new Promise((resolve) =>
@@ -41,7 +45,9 @@ export const submitListing = (
   );
 };
 
-export const deleteListing = (id: string): Promise<{ success: boolean }> => {
+export const deleteListing = async (
+  id: string,
+): Promise<{ success: boolean }> => {
   return new Promise((resolve) =>
     setTimeout(() => {
       const index = mockListings.findIndex((item) => item._id === id);

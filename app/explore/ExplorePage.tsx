@@ -10,38 +10,66 @@ import {
   Select,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { getListings } from "@/lib/api";
+import { ListingSkeleton } from "@/components/shared/ListingSkeleton";
 import { Listing } from "@/lib/mock-data";
-import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getListings } from "@/lib/api";
 
-export default function ExplorePage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="container mx-auto px-6 py-12 text-muted-foreground">
-          Loading listings…
-        </div>
-      }>
-      <ExplorePageContent />
-    </Suspense>
-  );
-}
+// function ExplorePage({ listingsData }: { listingsData: Listing[] }) {
+//   return (
+//     <Suspense
+//       fallback={
+//         <div className="container mx-auto px-6 py-12 text-muted-foreground">
+//           Loading listingsData…
+//         </div>
+//       }>
+//       <ExplorePageContent listingsData={listingsData} />
+//     </Suspense>
+//   );
+// }
 
-function ExplorePageContent() {
-  const [listings, setListings] = useState<Listing[]>([]);
+export default function ExplorePageContent({
+  searchQuery,
+}: {
+  searchQuery?: string;
+}) {
+  const [listingsData, setListingsData] = useState<Listing[]>([]);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [maxPrice, setMaxPrice] = useState([20000]);
-  const searchParams = useSearchParams();
-  const params = searchParams.toString();
+  const [category, setCategory] = useState("all");
+  const [maxPrice, setMaxPrice] = useState([50000]);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  //   getListings();
   useEffect(() => {
-    async function loadData() {
-      const data = (await getListings(params)) as Listing[];
-      setListings(data);
-    }
-    loadData();
-  }, [params]);
+    let isMounted = true;
+    const dataLoader = async () => {
+      const data = await getListings(searchQuery);
+      if (isMounted) {
+        setListingsData(data);
+      }
+    };
+    dataLoader();
+    return () => {
+      isMounted = false;
+    };
+  }, [searchQuery]);
+
+  // add filter query changes  to the URL search params
+  useEffect(() => {
+    const newParams = new URLSearchParams();
+    if (search) newParams.set("search", search);
+    if (category && category !== "all") newParams.set("category", category);
+    if (maxPrice[0] < 50000) newParams.set("maxPrice", maxPrice[0].toString());
+    const newUrl = `${pathname}?${newParams.toString()}`;
+    router.push(newUrl);
+  }, [search, category, pathname, router]);
+
+  const hasActiveFilters = Boolean(
+    search || category !== "all" || maxPrice[0] < 50000,
+  );
+  const showSkeleton = listingsData.length === 0 && !hasActiveFilters;
 
   return (
     <div className="container mx-auto px-6 max-w-7xl py-12 flex flex-col md:flex-row gap-8">
@@ -67,12 +95,12 @@ function ExplorePageContent() {
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent className=" *:p-2">
-                  <SelectItem value="All">All Categories</SelectItem>
-                  <SelectItem value="Duck">Duck</SelectItem>
-                  <SelectItem value="Chicken">Chicken</SelectItem>
-                  <SelectItem value="Egg">Egg</SelectItem>
-                  <SelectItem value="Goat">Goat</SelectItem>
-                  <SelectItem value="Cow">Cow</SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="duck">Duck</SelectItem>
+                  <SelectItem value="chicken">Chicken</SelectItem>
+                  <SelectItem value="egg">Egg</SelectItem>
+                  <SelectItem value="goat">Goat</SelectItem>
+                  <SelectItem value="cow">Cow</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -101,13 +129,19 @@ function ExplorePageContent() {
         <div className="mb-6">
           <h1 className="text-3xl font-semibold">Explore Listings</h1>
           <p className="text-muted-foreground">
-            Showing {listings.length} results
+            Showing {listingsData.length} results
           </p>
         </div>
 
-        {listings.length > 0 ? (
+        {showSkeleton ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {listings.map((listing) => (
+            {Array.from({ length: 6 }).map((_, index) => (
+              <ListingSkeleton key={index} />
+            ))}
+          </div>
+        ) : listingsData.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {listingsData.map((listing) => (
               <ListingCard key={listing._id} listing={listing} />
             ))}
           </div>
