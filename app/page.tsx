@@ -279,7 +279,7 @@ export default function HomePage() {
             {categories.map((cat) => (
               <motion.div key={cat.name} variants={safeScrollItem}>
                 <Link
-                  href={`/explore?category=${cat.name}`}
+                  href={`/explore?category=${cat.name.toLowerCase()}`}
                   className="block rounded-2xl border border-border/60 bg-background p-6 transition-colors hover:border-primary/40 hover:bg-primary/5">
                   <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-primary">
                     <Sprout className="h-5 w-5" />
@@ -321,7 +321,7 @@ export default function HomePage() {
               View all listings
             </Link>
           </motion.div>
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {isLoadingListings
               ? Array.from({ length: 4 }).map((_, index) => (
                   <div
@@ -385,17 +385,17 @@ export default function HomePage() {
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
         className="bg-background py-20">
-        <div className="container mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+        <div className="container mx-auto  max-w-5xl px-6 ">
           <motion.div
             variants={safeScrollItem}
-            className="rounded-3xl border border-border/60 bg-card p-8">
+            className="rounded-3xl text-center border border-border/60 bg-card p-8">
             <p className="text-sm font-medium uppercase tracking-[0.2em] text-primary">
               Why Khamar Bazaar
             </p>
             <h2 className="mt-3 text-3xl font-semibold text-foreground sm:text-4xl">
               Built for trust, clarity, and direct trade.
             </h2>
-            <p className="mt-4 text-lg leading-8 text-muted-foreground">
+            <p className="mt-4 text-lg max-w-xl mx-auto leading-8 text-muted-foreground">
               We make it easier for buyers and sellers to connect around real
               animals, fair prices, and straightforward communication.
             </p>
@@ -411,7 +411,7 @@ export default function HomePage() {
             </div>
           </motion.div>
 
-          <motion.div
+          {/* <motion.div
             variants={safeScrollItem}
             className="rounded-3xl bg-foreground p-8 text-background">
             <div className="mb-6 flex items-center gap-3">
@@ -449,7 +449,7 @@ export default function HomePage() {
                 </p>
               </div>
             </div>
-          </motion.div>
+          </motion.div> */}
         </div>
       </motion.section>
 

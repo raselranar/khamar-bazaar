@@ -47,22 +47,17 @@ export function Footer() {
                 className="text-sm opacity-80 hover:opacity-100 transition-opacity">
                 Contact
               </Link>
-              <Link
-                href="/terms"
-                className="text-sm opacity-80 hover:opacity-100 transition-opacity">
-                Terms & Privacy
-              </Link>
             </div>
 
             <div className="flex flex-col gap-3 col-span-2 md:col-span-1">
               <h3 className="font-medium mb-1">Social</h3>
               <a
-                href="#"
+                href="https://www.facebook.com/khamarbazaar"
                 className="text-sm opacity-80 hover:opacity-100 transition-opacity">
                 Facebook
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/khamarbazaar"
                 className="text-sm opacity-80 hover:opacity-100 transition-opacity">
                 Instagram
               </a>

@@ -12,23 +12,27 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { getListings } from "@/lib/api";
 import { Listing } from "@/lib/mock-data";
+import { useSearchParams } from "next/dist/client/components/navigation";
 import { useEffect, useMemo, useState } from "react";
 export default function ExplorePage() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [maxPrice, setMaxPrice] = useState([20000]);
-
+  const searchParams = useSearchParams();
+  const params = searchParams.toString();
   useEffect(() => {
     async function loadData() {
-      const data = (await getListings()) as Listing[];
+      const data = (await getListings(params)) as Listing[];
       setListings(data);
     }
     loadData();
-  }, []);
+  }, [params]);
 
   const filtered = useMemo(() => {
     let result = listings;
+    console.log(result);
+    if (!(Array.isArray(result) && result.length >= 1)) return result;
 
     if (search) {
       result = result.filter((l) =>
@@ -38,7 +42,7 @@ export default function ExplorePage() {
     if (category !== "All") {
       result = result.filter((l) => l.category === category);
     }
-    result = result.filter((l) => l.price <= maxPrice[0]);
+    result = result?.filter((l) => l.price <= maxPrice[0]);
 
     return result;
   }, [search, category, maxPrice, listings]);
