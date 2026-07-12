@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getListingById } from "@/lib/api";
@@ -5,6 +6,27 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, MapPin, Calendar, Tag } from "lucide-react";
 import Image from "next/image";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const listing = await getListingById(id);
+
+  if (!listing) {
+    return {
+      title: "Listing Not Found | Khamar Bazaar",
+      description: "The requested livestock listing could not be found.",
+    };
+  }
+
+  return {
+    title: `${listing.title} | Khamar Bazaar`,
+    description: listing.shortDescription,
+  };
+}
 
 export default async function ListingDetailsPage({
   params,

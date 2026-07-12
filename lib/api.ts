@@ -3,9 +3,10 @@ import { Listing, mockListings } from "./mock-data";
 export type NewListing = Omit<Listing, "_id" | "createdAt" | "sellerId">;
 
 // get data
-export const getListings = async (params: string) => {
+export const getListings = async (params?: string) => {
   try {
-    const res = await fetch(`/api/listings?${params}`);
+    const query = params ? `?${params}` : "";
+    const res = await fetch(`/api/listings${query}`);
     return res.json();
   } catch (err) {
     console.log(err);

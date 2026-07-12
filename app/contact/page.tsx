@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, MapPin, Phone } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Contact | Khamar Bazaar",
+  description:
+    "Reach out to Khamar Bazaar for support, listing questions, or local marketplace help.",
+};
 
 export default function ContactPage() {
   return (

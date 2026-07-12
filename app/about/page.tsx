@@ -1,3 +1,9 @@
+export const metadata = {
+  title: "About | Khamar Bazaar",
+  description:
+    "Learn how Khamar Bazaar helps local farmers and buyers trade livestock and poultry directly.",
+};
+
 export default function AboutPage() {
   return (
     <div className="container mx-auto px-6 max-w-5xl py-20">
