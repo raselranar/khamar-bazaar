@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { getFeaturedListings } from "@/lib/api";
 import { ListingCard } from "@/components/shared/ListingCard";
 import { Listing } from "@/lib/mock-data";
+import { ListingSkeleton } from "@/components/shared/ListingSkeleton";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -39,7 +40,7 @@ const scrollRevealContainer: Variants = {
 };
 
 const scrollRevealItem: Variants = {
-  hidden: { opacity: 0, y: 12 },
+  // hidden: { opacity: 0, y: 12 },
   show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
 };
 
@@ -137,7 +138,7 @@ export default function HomePageClient() {
     }
     loadData();
   }, []);
-
+  console.log(featuredListings);
   const safeContainer = prefersReducedMotion
     ? motionFallback
     : containerVariants;
@@ -321,13 +322,10 @@ export default function HomePageClient() {
               View all listings
             </Link>
           </motion.div>
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {isLoadingListings
               ? Array.from({ length: 4 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="h-80 animate-pulse rounded-2xl border border-border/60 bg-card"
-                  />
+                  <ListingSkeleton key={index} />
                 ))
               : featuredListings.map((listing) => (
                   <motion.div

@@ -15,7 +15,7 @@ const page = async ({ searchParams }: PageProps) => {
   const search = new URLSearchParams(
     searchParamsValue as unknown as string,
   ).toString();
-  // const data = await getListings(search);
-  return <ExplorePage searchQuery={search} />;
+  const data = await getListings(search);
+  return <ExplorePage listingsData={data} />;
 };
 export default page;

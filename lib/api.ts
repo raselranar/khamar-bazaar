@@ -58,7 +58,12 @@ export const deleteListing = async (
 };
 
 export const getListingById = async (id: string): Promise<Listing | null> => {
-  const listItem = mockListings.find((item) => item._id === id);
-  if (!listItem) return null;
-  return listItem;
+  try {
+    const res = await fetch(`${baseUrl}/api/listings/${id}`);
+
+    return res.json();
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
 };

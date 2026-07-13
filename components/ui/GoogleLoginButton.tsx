@@ -8,11 +8,9 @@ export default function GoogleLoginButton({
   className: string;
 }) {
   const handlerSignIn = async () => {
-    const { data } = await authClient.signIn.social({
+    await authClient.signIn.social({
       provider: "google",
     });
-    if (data) return toast.success("login successful");
-    toast.error("login failed");
   };
 
   return (

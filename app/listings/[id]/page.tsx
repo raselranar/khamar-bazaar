@@ -115,7 +115,7 @@ export default async function ListingDetailsPage({
           </div>
 
           {/* Seller Card */}
-          <Card className="mt-auto bg-background border-border shadow-sm">
+          {/* <Card className="mt-auto bg-background border-border shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-secondary text-primary rounded-full flex items-center justify-center font-semibold text-lg">
@@ -132,9 +132,10 @@ export default async function ListingDetailsPage({
               </div>
               <Button className="w-full h-12 text-base">Contact Seller</Button>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>
+    // write a message for github commit
   );
 }

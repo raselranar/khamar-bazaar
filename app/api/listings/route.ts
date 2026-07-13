@@ -6,8 +6,8 @@ interface QueryParams {
   search?: string;
   price?: { $gte?: number; $lte?: number };
   $or?: [
-    { name: { $regex: string; $options: string } },
-    { description: { $regex: string; $options: string } },
+    { title: { $regex: string; $options: string } },
+    { shortDescription: { $regex: string; $options: string } },
   ];
 }
 
@@ -25,8 +25,8 @@ export const GET = async (request: NextRequest) => {
     // filter by search
     if (search) {
       query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
+        { title: { $regex: search, $options: "i" } },
+        { shortDescription: { $regex: search, $options: "i" } },
       ];
     }
 

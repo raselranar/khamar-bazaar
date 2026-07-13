@@ -7,14 +7,18 @@ import { Button } from "../ui/button";
 import { LogOut, Menu, Sprout } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { authClient } from "@/lib/auth-client";
-
-export function Navbar() {
+export function Navbar({
+  session,
+  signout,
+}: {
+  session: typeof authClient.$Infer.Session | null;
+  signout: () => Promise<void>;
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = authClient.useSession();
 
   const navItems = [
     { href: "/", label: "Home" },
@@ -32,8 +36,8 @@ export function Navbar() {
   const handleSignOut = async () => {
     setIsSigningOut(true);
     try {
-      await authClient.signOut();
-      router.push("/");
+      await signout();
+      router.refresh();
     } finally {
       setIsSigningOut(false);
       setOpen(false);
@@ -89,7 +93,7 @@ export function Navbar() {
               size="sm"
               onClick={handleSignOut}
               disabled={isSigningOut}
-              className="rounded-full">
+              className="rounded-full cursor-pointer">
               <LogOut className="h-4 w-4" />
               {isSigningOut ? "Signing out..." : "Log out"}
             </Button>

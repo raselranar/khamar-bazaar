@@ -14,60 +14,56 @@ import { ListingSkeleton } from "@/components/shared/ListingSkeleton";
 import { Listing } from "@/lib/mock-data";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getListings } from "@/lib/api";
-
-// function ExplorePage({ listingsData }: { listingsData: Listing[] }) {
-//   return (
-//     <Suspense
-//       fallback={
-//         <div className="container mx-auto px-6 py-12 text-muted-foreground">
-//           Loading listingsData…
-//         </div>
-//       }>
-//       <ExplorePageContent listingsData={listingsData} />
-//     </Suspense>
-//   );
-// }
 
 export default function ExplorePageContent({
-  searchQuery,
+  listingsData = [],
 }: {
   searchQuery?: string;
+  listingsData: Listing[];
 }) {
-  const [listingsData, setListingsData] = useState<Listing[]>([]);
+  // const [listingsData, setListingsData] = useState<Listing[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
-  const [maxPrice, setMaxPrice] = useState([50000]);
+  const [maxPrice, setMaxPrice] = useState([30000]);
   const pathname = usePathname();
   const router = useRouter();
+  //   getListings;
+  // const isFirstRender = useRef(true);
+  // useEffect(() => {
+  //   // Skip the very first execution
+  //   if (isFirstRender.current) {
+  //     isFirstRender.current = false;
+  //     return;
+  //   }
 
-  //   getListings();
-  useEffect(() => {
-    let isMounted = true;
-    const dataLoader = async () => {
-      const data = await getListings(searchQuery);
-      if (isMounted) {
-        setListingsData(data);
-      }
-    };
-    dataLoader();
-    return () => {
-      isMounted = false;
-    };
-  }, [searchQuery]);
+  //   let isMounted = true;
+
+  //   const dataLoader = async () => {
+  //     const data = await getListings(searchQuery);
+  //     if (isMounted) {
+  //       setListingsData(data);
+  //     }
+  //   };
+
+  //   dataLoader();
+
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [searchQuery]);
 
   // add filter query changes  to the URL search params
   useEffect(() => {
     const newParams = new URLSearchParams();
     if (search) newParams.set("search", search);
     if (category && category !== "all") newParams.set("category", category);
-    if (maxPrice[0] < 50000) newParams.set("maxPrice", maxPrice[0].toString());
+    if (maxPrice[0] < 30000) newParams.set("maxPrice", maxPrice[0].toString());
     const newUrl = `${pathname}?${newParams.toString()}`;
     router.push(newUrl);
-  }, [search, category, pathname, router]);
+  }, [search, category, maxPrice, pathname, router]);
 
   const hasActiveFilters = Boolean(
-    search || category !== "all" || maxPrice[0] < 50000,
+    search || category !== "all" || maxPrice[0] < 30000,
   );
   const showSkeleton = listingsData.length === 0 && !hasActiveFilters;
 
@@ -116,7 +112,7 @@ export default function ExplorePageContent({
                 className="bg-muted-foreground rounded-2xl h-fit p-1"
                 value={maxPrice}
                 onValueChange={setMaxPrice}
-                max={50000}
+                max={30000}
                 step={100}
               />
             </div>
