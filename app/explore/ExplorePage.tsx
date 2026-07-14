@@ -13,8 +13,17 @@ import { Slider } from "@/components/ui/slider";
 import { ListingSkeleton } from "@/components/shared/ListingSkeleton";
 import { Listing } from "@/lib/mock-data";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getListings } from "@/lib/api";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function ExplorePageContent() {
   const [listingsData, setListingsData] = useState<Listing[]>([]);
@@ -25,14 +34,20 @@ export default function ExplorePageContent() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get("page")) || 1,
+  );
+  const [totalPages, setTotalPages] = useState<number>(1);
+
   const paramsString = searchParams.toString();
 
   //   getListings;
   useEffect(() => {
     const dataLoader = async () => {
-      const data = await getListings(paramsString);
+      const { data, listingCount } = await getListings(paramsString);
+      console.log(listingCount);
       setListingsData(data);
+      setTotalPages(Math.ceil(listingCount / 3));
     };
 
     dataLoader();
@@ -41,13 +56,15 @@ export default function ExplorePageContent() {
   // add filter query changes  to the URL search params
   useEffect(() => {
     const newParams = new URLSearchParams();
+    newParams.set("page", currentPage.toString());
+    // if (search) newParams.set("search", search);
     if (search) newParams.set("search", search);
     if (category && category !== "all") newParams.set("category", category);
     if (sort && sort !== "default") newParams.set("sort", sort);
     if (maxPrice[0] < 30000) newParams.set("maxPrice", maxPrice[0].toString());
     const newUrl = `${pathname}?${newParams.toString()}`;
     router.push(newUrl);
-  }, [search, category, sort, maxPrice, pathname, router]);
+  }, [search, category, sort, maxPrice, pathname, router, currentPage]);
 
   const hasActiveFilters = Boolean(
     search || category !== "all" || sort !== "default" || maxPrice[0] < 30000,
@@ -136,11 +153,48 @@ export default function ExplorePageContent() {
             ))}
           </div>
         ) : listingsData.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {listingsData.map((listing) => (
-              <ListingCard key={listing._id} listing={listing} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {listingsData.map((listing) => (
+                <ListingCard key={listing._id} listing={listing} />
+              ))}
+            </div>
+            {/* Pagination */}
+            <Pagination className="mt-4 justify-end">
+              <PaginationContent>
+                <PaginationItem className="cursor-pointer">
+                  <PaginationPrevious
+                    onClick={() => {
+                      setCurrentPage((prev) => (prev == 1 ? 1 : prev - 1));
+                    }}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <PaginationItem className="cursor-pointer" key={i}>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(i + 1)}
+                      isActive={i + 1 === currentPage}>
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>{/* <PaginationEllipsis /> */}</PaginationItem>
+                <PaginationItem className="cursor-pointer">
+                  <PaginationNext
+                    onClick={() => {
+                      setCurrentPage((prev) => {
+                        if (prev >= totalPages) {
+                          return totalPages;
+                        }
+
+                        return prev + 1;
+                      });
+                    }}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </>
         ) : (
           <div className="py-20 text-center text-muted-foreground bg-card border rounded-xl">
             No listings found matching your criteria.

@@ -9,22 +9,18 @@ interface QueryParams {
     { title: { $regex: string; $options: string } },
     { shortDescription: { $regex: string; $options: string } },
   ];
+  page?: number;
 }
 
 export const GET = async (request: NextRequest) => {
   try {
     const { searchParams } = new URL(request.url);
-    const { category, search, minPrice, maxPrice, sort } = Object.fromEntries(
-      searchParams.entries(),
-    );
+    const { category, search, minPrice, maxPrice, sort, page } =
+      Object.fromEntries(searchParams.entries());
     const query: QueryParams = {};
-    const sortQuery: Record<string, 1 | -1> = {};
     // filter by category
     if (category) {
       query.category = category;
-    }
-    if (sort) {
-      sortQuery.price = sort === "asc" ? 1 : -1;
     }
     // filter by search
     if (search) {
@@ -40,15 +36,23 @@ export const GET = async (request: NextRequest) => {
       if (minPrice !== undefined) query.price.$gte = Number(minPrice);
       if (maxPrice !== undefined) query.price.$lte = Number(maxPrice);
     }
+    const pipeline: Record<string, unknown>[] = [{ $match: query }];
+    if (sort) {
+      const sortDir = sort === "asc" ? 1 : -1;
+      pipeline.push({ $sort: { price: sortDir } });
+    }
 
+    const skip = page ? (Number(page) - 1) * 3 : 0;
+    pipeline.push({ $skip: skip }, { $limit: 3 });
     const client = await clientPromise;
     const db = client?.db("khamar-bazaar");
+    const listingCount = await db?.collection("listings").countDocuments();
     const listings = await db
       ?.collection("listings")
-      .find(query)
-      .sort(sortQuery)
+      .aggregate(pipeline)
       .toArray();
-    return NextResponse.json(listings);
+    console.log(listingCount);
+    return NextResponse.json({ data: listings, listingCount });
   } catch (error) {
     console.error("Error in GET /api/listings", error);
     return NextResponse.json(
