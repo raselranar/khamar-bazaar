@@ -14,13 +14,17 @@ interface QueryParams {
 export const GET = async (request: NextRequest) => {
   try {
     const { searchParams } = new URL(request.url);
-    const { category, search, minPrice, maxPrice } = Object.fromEntries(
+    const { category, search, minPrice, maxPrice, sort } = Object.fromEntries(
       searchParams.entries(),
     );
     const query: QueryParams = {};
+    const sortQuery: Record<string, 1 | -1> = {};
     // filter by category
     if (category) {
       query.category = category;
+    }
+    if (sort) {
+      sortQuery.price = sort === "asc" ? 1 : -1;
     }
     // filter by search
     if (search) {
@@ -37,12 +41,13 @@ export const GET = async (request: NextRequest) => {
       if (maxPrice !== undefined) query.price.$lte = Number(maxPrice);
     }
 
-    console.log(category, search, minPrice, maxPrice);
     const client = await clientPromise;
     const db = client?.db("khamar-bazaar");
-    console.log(db?.collection("listings"));
-    const listings = await db?.collection("listings").find(query).toArray();
-    console.log(listings);
+    const listings = await db
+      ?.collection("listings")
+      .find(query)
+      .sort(sortQuery)
+      .toArray();
     return NextResponse.json(listings);
   } catch (error) {
     console.error("Error in GET /api/listings", error);

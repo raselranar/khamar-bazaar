@@ -12,58 +12,45 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { ListingSkeleton } from "@/components/shared/ListingSkeleton";
 import { Listing } from "@/lib/mock-data";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getListings } from "@/lib/api";
 
-export default function ExplorePageContent({
-  listingsData = [],
-}: {
-  searchQuery?: string;
-  listingsData: Listing[];
-}) {
-  // const [listingsData, setListingsData] = useState<Listing[]>([]);
+export default function ExplorePageContent() {
+  const [listingsData, setListingsData] = useState<Listing[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
+  const [sort, setSort] = useState("default");
   const [maxPrice, setMaxPrice] = useState([30000]);
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const paramsString = searchParams.toString();
+
   //   getListings;
-  // const isFirstRender = useRef(true);
-  // useEffect(() => {
-  //   // Skip the very first execution
-  //   if (isFirstRender.current) {
-  //     isFirstRender.current = false;
-  //     return;
-  //   }
+  useEffect(() => {
+    const dataLoader = async () => {
+      const data = await getListings(paramsString);
+      setListingsData(data);
+    };
 
-  //   let isMounted = true;
-
-  //   const dataLoader = async () => {
-  //     const data = await getListings(searchQuery);
-  //     if (isMounted) {
-  //       setListingsData(data);
-  //     }
-  //   };
-
-  //   dataLoader();
-
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // }, [searchQuery]);
+    dataLoader();
+  }, [paramsString]);
 
   // add filter query changes  to the URL search params
   useEffect(() => {
     const newParams = new URLSearchParams();
     if (search) newParams.set("search", search);
     if (category && category !== "all") newParams.set("category", category);
+    if (sort && sort !== "default") newParams.set("sort", sort);
     if (maxPrice[0] < 30000) newParams.set("maxPrice", maxPrice[0].toString());
     const newUrl = `${pathname}?${newParams.toString()}`;
     router.push(newUrl);
-  }, [search, category, maxPrice, pathname, router]);
+  }, [search, category, sort, maxPrice, pathname, router]);
 
   const hasActiveFilters = Boolean(
-    search || category !== "all" || maxPrice[0] < 30000,
+    search || category !== "all" || sort !== "default" || maxPrice[0] < 30000,
   );
   const showSkeleton = listingsData.length === 0 && !hasActiveFilters;
 
@@ -97,6 +84,19 @@ export default function ExplorePageContent({
                   <SelectItem value="egg">Egg</SelectItem>
                   <SelectItem value="goat">Goat</SelectItem>
                   <SelectItem value="cow">Cow</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Sort By Price</Label>
+              <Select value={sort} onValueChange={setSort}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Default" />
+                </SelectTrigger>
+                <SelectContent className=" *:p-2">
+                  <SelectItem value="default">Default</SelectItem>
+                  <SelectItem value="asc">Low to High</SelectItem>
+                  <SelectItem value="desc">High to Low</SelectItem>
                 </SelectContent>
               </Select>
             </div>
