@@ -24,6 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { getUserTokenClient } from "@/lib/getUserTokenClient";
 
 export default function ExplorePageContent() {
   const [listingsData, setListingsData] = useState<Listing[]>([]);
@@ -52,7 +53,6 @@ export default function ExplorePageContent() {
 
     dataLoader();
   }, [paramsString]);
-
   // add filter query changes  to the URL search params
   useEffect(() => {
     const newParams = new URLSearchParams();
@@ -69,7 +69,8 @@ export default function ExplorePageContent() {
   const hasActiveFilters = Boolean(
     search || category !== "all" || sort !== "default" || maxPrice[0] < 30000,
   );
-  const showSkeleton = listingsData.length === 0 && !hasActiveFilters;
+  const showSkeleton =
+    listingsData && listingsData?.length === 0 && !hasActiveFilters;
 
   return (
     <div className="container mx-auto px-6 max-w-7xl py-12 flex flex-col md:flex-row gap-8">
@@ -142,7 +143,7 @@ export default function ExplorePageContent() {
         <div className="mb-6">
           <h1 className="text-3xl font-semibold">Explore Listings</h1>
           <p className="text-muted-foreground">
-            Showing {listingsData.length} results
+            Showing {listingsData && listingsData.length} results
           </p>
         </div>
 
@@ -152,7 +153,7 @@ export default function ExplorePageContent() {
               <ListingSkeleton key={index} />
             ))}
           </div>
-        ) : listingsData.length > 0 ? (
+        ) : listingsData && listingsData.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {listingsData.map((listing) => (

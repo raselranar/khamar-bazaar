@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import GoogleLoginButton from "@/components/ui/GoogleLoginButton";
+import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -35,8 +36,14 @@ export default function LoginPageClient() {
   } = form;
 
   async function onSubmit(values: LoginFormValues) {
-    toast.success("Demo login ready");
-    console.log(values);
+    const { data, error } = await authClient.signIn.email({
+      email: values.email, // required
+      password: values.password, // required
+      rememberMe: true,
+      callbackURL: "/",
+    });
+    if (data) return toast.success("Login successful! Redirecting...");
+    if (error) return toast.error(error.message);
   }
 
   return (

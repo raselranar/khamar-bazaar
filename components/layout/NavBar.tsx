@@ -9,10 +9,8 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { authClient } from "@/lib/auth-client";
 export function Navbar({
   session,
-  signout,
 }: {
   session: typeof authClient.$Infer.Session | null;
-  signout: () => Promise<void>;
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -28,7 +26,7 @@ export function Navbar({
 
   const authItems = session
     ? [
-        { href: "/dashboard", label: "Dashboard" },
+        // { href: "/dashboard", label: "Dashboard" },
         { href: "/listings/add", label: "Add Listing" },
       ]
     : [];
@@ -36,8 +34,14 @@ export function Navbar({
   const handleSignOut = async () => {
     setIsSigningOut(true);
     try {
-      await signout();
-      router.refresh();
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            router.push("/login"); // Handles routing smoothly
+            router.refresh(); // Clears server-component layouts
+          },
+        },
+      });
     } finally {
       setIsSigningOut(false);
       setOpen(false);

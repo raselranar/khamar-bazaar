@@ -1,4 +1,5 @@
 import clientPromise from "@/lib/mongodb";
+import validateToken from "@/lib/tokenVerify";
 import { NextRequest, NextResponse } from "next/server";
 
 interface QueryParams {
@@ -13,7 +14,15 @@ interface QueryParams {
 }
 
 export const GET = async (request: NextRequest) => {
+  // const authorization = request.headers.get("authorization");
+  // const token = authorization?.split(" ")[1];
   try {
+    // if (!token) {
+    //   return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    // }
+    // const payload = await validateToken(token);
+    // console.log(payload);
+
     const { searchParams } = new URL(request.url);
     const { category, search, minPrice, maxPrice, sort, page } =
       Object.fromEntries(searchParams.entries());
@@ -51,7 +60,7 @@ export const GET = async (request: NextRequest) => {
       ?.collection("listings")
       .aggregate(pipeline)
       .toArray();
-    console.log(listingCount);
+    // console.log(listingCount);
     return NextResponse.json({ data: listings, listingCount });
   } catch (error) {
     console.error("Error in GET /api/listings", error);

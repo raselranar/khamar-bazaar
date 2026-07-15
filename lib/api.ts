@@ -1,14 +1,20 @@
 "use server";
+import { getUserTokenClient } from "./getUserTokenClient";
 import { Listing, mockListings } from "./mock-data";
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 export type NewListing = Omit<Listing, "_id" | "createdAt" | "sellerId">;
+
+const authHeaders = async () => {
+  const token = await getUserTokenClient();
+
+  return { authorization: `Bearer ${token}` };
+};
 
 // get data
 export const getListings = async (params?: string) => {
   try {
     const query = params ? `?${params}` : "";
-    console.log(query);
-    // const res = await fetch(`/api/listings${query}`);
+
     const res = await fetch(`${baseUrl}/api/listings${query}`);
 
     return res.json();
@@ -32,17 +38,14 @@ export const getFeaturedListings = async (): Promise<Listing[]> => {
 export const submitListing = async (
   newList: NewListing,
 ): Promise<{ success: boolean }> => {
-  return new Promise((resolve) =>
-    setTimeout(() => {
-      mockListings.push({
-        ...newList,
-        _id: `l${mockListings.length + 1}`,
-        sellerId: "u1",
-        createdAt: new Date(),
-      });
-      resolve({ success: true });
-    }, 600),
-  );
+  console.log(newList);
+  const res = await fetch(`${baseUrl}/api/listings/add`, {
+    method: "POST",
+    headers: await authHeaders(),
+    body: JSON.stringify(newList),
+  });
+  if (!res.ok) return { success: false };
+  return { success: true };
 };
 
 export const deleteListing = async (

@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import GoogleLoginButton from "@/components/ui/GoogleLoginButton";
 import { authClient } from "@/lib/auth-client";
+import { on } from "events";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -18,10 +20,20 @@ const formSchema = z
     email: z.string().email({ message: "Please enter a valid email address." }),
     password: z
       .string()
-      .min(6, { message: "Password must be at least 6 characters." }),
+      .min(8, { message: "Password must be at least 8 characters." })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter",
+      })
+      .regex(/[a-z]/, {
+        message: "Password must contain at least one lowercase letter",
+      })
+      .regex(/[0-9]/, { message: "Password must contain at least one number" })
+      .regex(/[^A-Za-z0-9]/, {
+        message: "Password must contain at least one special character",
+      }),
     confirmPassword: z
       .string()
-      .min(6, { message: "Please confirm your password." }),
+      .min(8, { message: "Please confirm your password." }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match.",
@@ -40,6 +52,7 @@ export default function RegisterPageClient() {
       confirmPassword: "",
     },
   });
+  const router = useRouter();
 
   const {
     register,
@@ -52,7 +65,11 @@ export default function RegisterPageClient() {
       name: values.name,
       email: values.email,
       password: values.password,
-      callbackURL: "/home",
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login"); // redirect to login page
+        },
+      },
     });
     if (!data) return toast.error("Registration failed!" + error.message);
     toast.success(`Welcome, ${values.name}!`);

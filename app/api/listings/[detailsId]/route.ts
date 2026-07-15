@@ -1,7 +1,6 @@
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
-import { string } from "zod";
 
 export const GET = async (
   request: Request,
@@ -11,12 +10,12 @@ export const GET = async (
   try {
     const client = await clientPromise;
     const db = client?.db("khamar-bazaar");
-    console.log(db?.collection("listings"));
+    // console.log(db?.collection("listings"));
     const query: { _id: ObjectId } = {
       _id: new ObjectId(detailsId),
     };
     const listings = await db?.collection("listings").findOne(query);
-    console.log(listings);
+    // console.log(listings);
     return NextResponse.json(listings);
   } catch (error) {
     console.error("Error in GET /api/listings/[detailsId]", error);

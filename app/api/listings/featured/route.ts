@@ -5,13 +5,11 @@ export const GET = async () => {
   try {
     const client = await clientPromise;
     const db = client?.db("khamar-bazaar");
-    console.log(db?.collection("listings"));
     const listings = await db
       ?.collection("listings")
       .find({})
       .limit(4)
       .toArray();
-    console.log(listings);
     return NextResponse.json(listings);
   } catch (error) {
     console.error("Error in GET /api/listings/featured", error);
