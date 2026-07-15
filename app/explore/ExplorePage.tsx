@@ -13,18 +13,16 @@ import { Slider } from "@/components/ui/slider";
 import { ListingSkeleton } from "@/components/shared/ListingSkeleton";
 import { Listing } from "@/lib/mock-data";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getListings } from "@/lib/api";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { getUserTokenClient } from "@/lib/getUserTokenClient";
 
 export default function ExplorePageContent() {
   const [listingsData, setListingsData] = useState<Listing[]>([]);
@@ -39,6 +37,7 @@ export default function ExplorePageContent() {
     Number(searchParams.get("page")) || 1,
   );
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [listingCount, setListingCount] = useState<number>(0);
 
   const paramsString = searchParams.toString();
 
@@ -48,6 +47,7 @@ export default function ExplorePageContent() {
       const { data, listingCount } = await getListings(paramsString);
       console.log(listingCount);
       setListingsData(data);
+      setListingCount(listingCount);
       setTotalPages(Math.ceil(listingCount / 3));
     };
 
@@ -143,7 +143,7 @@ export default function ExplorePageContent() {
         <div className="mb-6">
           <h1 className="text-3xl font-semibold">Explore Listings</h1>
           <p className="text-muted-foreground">
-            Showing {listingsData && listingsData.length} results
+            Showing {listingsData && listingCount} results
           </p>
         </div>
 

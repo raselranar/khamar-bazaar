@@ -174,7 +174,7 @@ export default function AddListingPageClient() {
             onClick={() =>
               !imagePreview && !isUploading && fileInputRef.current?.click()
             }
-            className={`relative min-h-[200px] rounded-lg border-2 border-dashed flex flex-col items-center justify-center p-6 transition-colors duration-200 ${
+            className={`relative min-h-50 rounded-lg border-2 border-dashed flex flex-col items-center justify-center p-6 transition-colors duration-200 ${
               isDragging
                 ? "border-primary bg-secondary/10"
                 : "border-muted-foreground/20"
@@ -203,7 +203,7 @@ export default function AddListingPageClient() {
                 </p>
               </div>
             ) : imagePreview ? (
-              <div className="relative w-full h-[220px] group">
+              <div className="relative w-full h-55 group">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={imagePreview}
