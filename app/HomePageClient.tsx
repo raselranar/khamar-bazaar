@@ -128,7 +128,10 @@ export default function HomePageClient() {
   const prefersReducedMotion = useReducedMotion();
   const [featuredListings, setFeaturedListings] = useState<Listing[]>([]);
   const [isLoadingListings, setIsLoadingListings] = useState(true);
-  console.log({ env: process.env.NEXT_PUBLIC_BASE_URL, featuredListings });
+  console.log({
+    env: process.env.NEXT_PUBLIC_BASE_URL,
+    featuredListings: featuredListings.length,
+  });
   useEffect(() => {
     async function loadData() {
       setIsLoadingListings(true);

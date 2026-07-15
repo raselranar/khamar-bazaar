@@ -1,7 +1,7 @@
 "use server";
 import { getUserTokenClient } from "./getUserTokenClient";
 import { Listing, mockListings } from "./mock-data";
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 export type NewListing = Omit<Listing, "_id" | "createdAt" | "sellerId">;
 
 const authHeaders = async () => {
