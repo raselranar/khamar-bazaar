@@ -42,7 +42,7 @@ export default function GlobalError({
           variant="outline"
           onClick={() => (window.location.href = "/")}
           className="h-11 px-6 text-sm font-medium border-border">
-          Return to Dashboard
+          Return to Home
         </Button>
       </div>
     </div>

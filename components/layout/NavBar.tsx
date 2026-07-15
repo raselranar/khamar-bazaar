@@ -28,6 +28,7 @@ export function Navbar({
     ? [
         // { href: "/dashboard", label: "Dashboard" },
         { href: "/listings/add", label: "Add Listing" },
+        { href: "/listings/manage", label: "Manage Listing" },
       ]
     : [];
 
